@@ -112,6 +112,8 @@ At an earned boundary:
 
 These semantics belong in the protected contract when callers depend on them; provider mechanics stay behind the adapter.
 
+Behavioral verification must exercise valid and invalid external data, each translated actionable error, opaque errors, and every applicable cache, freshness, invalidation, and post-expiry failure path.
+
 ## Feature-flag example
 
 A shared package owns protected concepts, not every consumer app's flag registry. It must not accept raw LaunchDarkly, Unleash, or custom-provider keys or types.
@@ -149,6 +151,8 @@ If the protected caller needs only one decision, prefer a capability-shaped inte
 When existing code already leaks provider semantics, first decide the destination interface, module depth, adapter placement, and composition point. Then require a soft handoff to a behavior-preserving clean-cutover capability; do not duplicate a migration workflow inside this skill.
 
 `refactor-transaction` is an optional current provider of that capability. It is not a dependency of this repository. Never issue an unqualified invocation: the host may not provide it, and a future execution profile may bind another provider.
+
+Before deleting the old path, enumerate every current caller and establish consumer-observable behavior proof through the current path. The clean cutover must preserve that proved behavior while migrating every caller; only then may it remove the old exports, direct calls, provider-shaped types, and translations.
 
 ## Cleanup and proof
 
