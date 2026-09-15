@@ -1,0 +1,14 @@
+{
+  "domains": {
+    "decisions": {
+      "description": "Work decision frameworks and prioritization discipline",
+      "skills": ["decision-framework"],
+      "docs": ["evals/decision-framework/cases.md"]
+    },
+    "seams": {
+      "description": "Dependency-boundary decisions and evidence-backed engineering gates",
+      "skills": ["dependency-seam"],
+      "docs": ["evals/dependency-seam/cases.md"]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "pragmatic-engineering",
+  "version": "0.1.0",
+  "description": "Portable agent skills for pragmatic engineering decisions, prioritization, dependency seams, and evidence-backed quality gates",
+  "author": {
+    "name": "Dmytro L.",
+    "email": "dmltdev@proton.me"
+  },
+  "homepage": "https://github.com/dmltdev/pragmatic-engineering",
+  "repository": "https://github.com/dmltdev/pragmatic-engineering",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "engineering-decisions",
+    "decision-framework",
+    "prioritization",
+    "dependency-seam"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Pragmatic Engineering",
+    "shortDescription": "Engineering decision and quality-gate skills",
+    "longDescription": "Portable skills for choosing work decisions under uncertainty, prioritizing engineering or product work, placing dependency seams, and requiring evidence-backed quality gates.",
+    "developerName": "Dmytro L.",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/dmltdev/pragmatic-engineering",
+    "defaultPrompt": [
+      "Help me choose between these engineering options",
+      "Prioritize this engineering work under uncertainty",
+      "Decide whether this dependency needs a seam"
+    ]
+  }
+}

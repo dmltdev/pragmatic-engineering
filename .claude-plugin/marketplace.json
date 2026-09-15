@@ -1,0 +1,23 @@
+{
+  "name": "pragmatic-engineering",
+  "description": "Pragmatic Engineering plugin marketplace",
+  "owner": {
+    "name": "Dmytro L.",
+    "email": "dmltdev@proton.me"
+  },
+  "plugins": [
+    {
+      "name": "pragmatic-engineering",
+      "description": "Portable agent skills for pragmatic engineering decisions, prioritization, dependency seams, and evidence-backed quality gates",
+      "version": "0.1.0",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/dmltdev/pragmatic-engineering.git"
+      },
+      "author": {
+        "name": "Dmytro L.",
+        "email": "dmltdev@proton.me"
+      }
+    }
+  ]
+}
