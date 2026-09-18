@@ -114,6 +114,15 @@ These semantics belong in the protected contract when callers depend on them; pr
 
 Behavioral verification must exercise valid and invalid external data, each translated actionable error, opaque errors, and every applicable cache, freshness, invalidation, and post-expiry failure path.
 
+## Optional catalog enrichment
+
+This skill remains complete when installed alone. If the `pragmatic-catalog` capability is available, offer only these evidence-backed suggestions:
+
+- `boundary-trust/validate-external-data` only when repository evidence shows the external origin, its path into trusted logic, no prior runtime validation, and the expected shape or invariant malformed data can violate.
+- `failure-recovery/no-silent-fallback` only when evidence proves a dependency operation fails, code converts that failure into an outwardly valid value or success state, no applicable contract or approved policy authorizes the substitution, and callers cannot distinguish it from a normal result.
+
+Signals alone do not qualify. An optional handoff names `pragmatic-catalog`, each suggested ID, and its cited evidence; it never claims applicability or status. `pragmatic-catalog` re-evaluates both and omits every ID whose exact evidence is absent. Missing catalog capability changes none of this skill's procedure, decision, verification, or output contract; the handoff adds no report field.
+
 ## Feature-flag example
 
 A shared package owns protected concepts, not every consumer app's flag registry. It must not accept raw LaunchDarkly, Unleash, or custom-provider keys or types.

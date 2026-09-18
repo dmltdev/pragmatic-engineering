@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "categories": {
+    "documentPath": "categories.md",
+    "ids": [
+      "state-modeling",
+      "concurrency-async",
+      "data-access",
+      "boundary-trust",
+      "failure-recovery"
+    ]
+  },
+  "checks": [
+    {
+      "id": "state-modeling/no-impossible-state",
+      "path": "checks/state-modeling/no-impossible-state.md",
+      "category": "state-modeling",
+      "phases": ["design", "coding", "review"],
+      "tags": ["state", "lifecycle", "transition"],
+      "triggers": ["independent-state-flags", "invalid-state-combination", "unchecked-transition"],
+      "status": "active",
+      "relationships": {
+        "refines": [],
+        "conflicts-with": [],
+        "supersedes": []
+      },
+      "variants": []
+    },
+    {
+      "id": "concurrency-async/no-unobserved-promise",
+      "path": "checks/concurrency-async/no-unobserved-promise.md",
+      "category": "concurrency-async",
+      "phases": ["coding", "review"],
+      "tags": ["promise", "task-lifecycle", "async-failure"],
+      "triggers": ["discarded-promise", "fire-and-forget", "response-before-task-completion"],
+      "status": "active",
+      "relationships": {
+        "refines": [],
+        "conflicts-with": [],
+        "supersedes": []
+      },
+      "variants": [
+        {
+          "id": "concurrency-async/no-unobserved-promise/typescript",
+          "path": "variants/concurrency-async/no-unobserved-promise/typescript.md",
+          "scope": {
+            "kind": "language",
+            "value": "typescript"
+          },
+          "tags": ["typescript", "promise"]
+        }
+      ]
+    },
+    {
+      "id": "data-access/no-n-plus-one",
+      "path": "checks/data-access/no-n-plus-one.md",
+      "category": "data-access",
+      "phases": ["design", "coding", "review"],
+      "tags": ["query", "collection", "cardinality"],
+      "triggers": ["query-in-loop", "per-item-resolver", "repeated-remote-read"],
+      "status": "active",
+      "relationships": {
+        "refines": [],
+        "conflicts-with": [],
+        "supersedes": []
+      },
+      "variants": []
+    },
+    {
+      "id": "boundary-trust/validate-external-data",
+      "path": "checks/boundary-trust/validate-external-data.md",
+      "category": "boundary-trust",
+      "phases": ["design", "coding", "review"],
+      "tags": ["webhook", "schema-validation", "provider-response"],
+      "triggers": ["asserted-parsed-input", "unchecked-webhook-payload", "unvalidated-provider-response"],
+      "status": "active",
+      "relationships": {
+        "refines": [],
+        "conflicts-with": [],
+        "supersedes": []
+      },
+      "variants": []
+    },
+    {
+      "id": "failure-recovery/no-silent-fallback",
+      "path": "checks/failure-recovery/no-silent-fallback.md",
+      "category": "failure-recovery",
+      "phases": ["design", "coding", "review"],
+      "tags": ["fallback", "dependency-failure", "stale-cache"],
+      "triggers": ["catch-default", "empty-on-error", "stale-on-error"],
+      "status": "active",
+      "relationships": {
+        "refines": [],
+        "conflicts-with": [],
+        "supersedes": []
+      },
+      "variants": []
+    }
+  ]
+}

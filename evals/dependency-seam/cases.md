@@ -1,6 +1,6 @@
 # Dependency Seam Behavioral Pressure Evidence
 
-## Methodology and matched run conditions
+## Historical pre-enrichment methodology and matched run conditions
 
 - **Execution date:** 2026-09-09.
 - **Baseline batch completion recorded at:** 2026-09-09T08:15:20.536Z.
@@ -12,7 +12,7 @@
 - **Execution shape:** Eight independent stateless no-tool completions. The four baseline calls ran concurrently. Every post-skill case was rerun concurrently after the final skill correction; only that final comparable post-skill set appears below.
 - **Isolation:** Each completion received no tools, no repository access, and no prior conversation.
 - **Pair comparability:** Prompt, resolved model, harness, and settings are identical within each baseline/post-skill pair. The appended complete skill text is the only added input in the post-skill condition.
-- **Evaluated final skill text:** complete `skills/dependency-seam/SKILL.md`, SHA-256 `ef8c4274acf746f0378aecd5fde5fe6c73533823758460883feb428e2066ddfb`.
+- **Historical evaluated skill text:** pre-enrichment `skills/dependency-seam/SKILL.md`, SHA-256 `ef8c4274acf746f0378aecd5fde5fe6c73533823758460883feb428e2066ddfb`. The final enriched regression rerun appears below.
 - **Scoring:** Manual criterion-by-criterion binary scoring against exact returned text. No model-as-judge substitution and no style or out-of-scope implementation scoring.
 
 ### Baseline system prompt
@@ -21,7 +21,7 @@
 You are a senior implementation agent. Respond to the requested repository change with a concrete dependency-boundary decision, resulting interface or direct-use shape, placement, wiring, cleanup, and behavioral verification. Do not mention evaluation criteria or that you are being evaluated.
 ```
 
-### Post-skill system prompt rule
+### Historical post-skill system prompt rule
 
 The post-skill system prompt was the exact baseline system prompt followed by this exact delimiter and then the current complete `SKILL.md` text:
 
@@ -1275,3 +1275,424 @@ Unit and boundary tests should cover:
 **Total: 8/8**
 
 **Evaluator note:** Both conditions cover the complete trust, error, async, cache, invalidation, and expiry boundary. The final post-skill run explicitly enumerates the valid and invalid response paths plus actionable, opaque, fresh-cache, invalidation, and expired-cache proof paths.
+
+## Routed checks v2 supplemental pressure evidence
+
+### Supplemental methodology and run conditions
+
+- **Execution date:** 2026-09-18.
+- **Harness:** isolated stateless `pressure_completion` calls under OMP; the tool reported no harness version.
+- **Completion selection:** default model for every call.
+- **Resolved provider/model:** active resolved model `openai-codex/gpt-5.6-sol`.
+- **Settings:** no sampling overrides.
+- **Execution shape:** Six independent no-tool completions. Two baseline calls ran concurrently before the skill edit. Two initial post-skill calls exposed a handoff-naming gap. The skill wording was corrected, both post-skill cases were rerun concurrently, and only the final comparable post-skill outputs appear below.
+- **Isolation:** Each completion received no tools, repository access, or prior conversation.
+- **Pair comparability:** Prompt, resolved model, and settings are identical within each pair. The complete final skill text is the only post-skill addition.
+- **Post-skill system prompt construction:** the baseline system prompt, then `"\n\nApply the following skill as the authoritative engineering procedure for this response:\n\n"`, then the complete final `skills/dependency-seam/SKILL.md`.
+- **Evaluated final skill text:** complete `skills/dependency-seam/SKILL.md`, SHA-256 `94ed1d391624eee4029d746203cc4490e327286d6325e1e59e62570ab58770fc`.
+- **Scoring:** Manual criterion-by-criterion binary scoring against the exact returned text. A baseline pass remains a pass.
+
+### Supplemental baseline system prompt
+
+```text
+You are a senior implementation agent. Respond to the requested repository change with a concrete dependency-boundary decision, resulting interface or direct-use shape, placement, wiring, cleanup, and behavioral verification. Do not mention evaluation criteria or that you are being evaluated.
+```
+
+## Case E — standalone without catalog
+
+### Prompt
+
+```text
+The `pragmatic-catalog` capability is not installed. `src/invoices/renderDate.ts` makes one local call to `date-fns/format`; no foreign types, keys, errors, configuration, lifecycle, or async behavior escape the file, and there is no replacement, deletion, or migration requirement. A reviewer asks for an `IDateFormatter`, adapter, factory, and injection solely because the library is third-party. Apply the dependency-seam discipline and complete the decision. Catalog absence must not reduce the standalone decision.
+```
+
+### Binary criteria
+
+1. Completes the dependency-seam decision despite unavailable `pragmatic-catalog`.
+2. Keeps the local dependency direct and adds no interface, adapter, factory, or injection.
+3. Introduces no catalog hard dependency or cross-skill filesystem path.
+4. Uses the existing complete output contract without an enrichment field.
+5. Suggests no stable check ID or optional capability request when the catalog is absent.
+6. States a consumer-observable behavioral verification scenario.
+
+### Baseline exact output
+
+````text
+## Decision
+
+Keep the direct `date-fns/format` import in `src/invoices/renderDate.ts`.
+
+`date-fns` is a private implementation detail of that module: it is used once, synchronously, and does not expose library-owned types, errors, configuration, lifecycle, or behavior across the module boundary. Third-party ownership alone does not justify a dependency seam.
+
+## Resulting shape
+
+```ts
+// src/invoices/renderDate.ts
+import { format } from 'date-fns';
+
+export function renderDate(/* existing parameters */) {
+  return format(/* existing arguments */);
+}
+```
+
+Preserve the existing exported signature and format string.
+
+## Placement and wiring
+
+- No `IDateFormatter`
+- No adapter class
+- No factory
+- No dependency-injection token or container registration
+- No constructor or function parameter added for formatting
+- No new module or public export
+- Keep `date-fns` as the normal production dependency already used by this file
+
+If any proposed seam artifacts were added during review, remove them and restore callers to the existing `renderDate` API.
+
+## Behavioral verification
+
+Verify behavior at the `renderDate` boundary rather than mocking `date-fns`:
+
+- Assert representative dates produce the expected rendered strings.
+- Cover any existing locale, timezone, or invalid-date behavior that the function promises.
+- Run the repository’s type-check, unit tests, and lint checks.
+- Do not add tests asserting adapter/factory invocation details.
+
+A seam should be reconsidered only if a concrete boundary need appears—for example multiple formatter implementations, runtime selection, escaping foreign contracts, or an actual replacement/migration requirement. The missing catalog capability does not alter this standalone decision.
+````
+
+### Baseline scoring
+
+1. **PASS** — “The missing catalog capability does not alter this standalone decision.”
+2. **PASS** — “Keep the direct `date-fns/format` import”
+3. **PASS** — No catalog dependency or filesystem path appears.
+4. **FAIL** — The response uses free-form headings instead of the required completion report.
+5. **PASS** — It suggests no stable check ID or capability request.
+6. **PASS** — “Assert representative dates produce the expected rendered strings.”
+
+**Total: 5/6**
+
+### Post-skill exact output
+
+````text
+**Dependency seam decision complete.**
+- Protected behavior: `renderDate` consistently renders invoice dates using the existing format.
+- Dependency: `date-fns/format`
+- Decision: direct coupling
+- Evidence: The dependency is used by one local call in `src/invoices/renderDate.ts`; no foreign types, keys, errors, configuration, lifecycle, or asynchronous semantics escape the file; removing it would affect only this local implementation; and no replacement, deletion, migration, or multi-provider requirement exists. Third-party status alone does not earn a seam.
+- Protected interface: none
+- Module depth: direct/local
+- Adapter placement: none
+- Injection and composition: Keep the direct `date-fns/format` import and call in `src/invoices/renderDate.ts`; no factory, injection mechanism, or composition-root wiring is warranted.
+- Boundary semantics: Formatting remains synchronous with existing `date-fns` behavior. No additional validation, error translation, caching, freshness, or fallback policy is required.
+- Cleanup: Do not add `IDateFormatter`, an adapter, a factory, or injection plumbing; remove such artifacts if introduced solely for this review.
+- Refactor handoff: none
+- Verification: The real `renderDate` path makes its existing local `date-fns/format` call and returns the formatted invoice-date result without exposing dependency semantics outside the file; the requested abstraction would not change observable behavior.
+````
+
+### Post-skill scoring
+
+1. **PASS** — It completes the decision without requiring the catalog.
+2. **PASS** — “Decision: direct coupling” and “Do not add `IDateFormatter`, an adapter, a factory, or injection plumbing”
+3. **PASS** — No catalog dependency or filesystem path appears.
+4. **PASS** — It uses the unchanged completion report and adds no field.
+5. **PASS** — It suggests no stable check ID or capability request.
+6. **PASS** — “The real `renderDate` path makes its existing local `date-fns/format` call and returns the formatted invoice-date result”
+
+**Total: 6/6**
+
+**Evaluator note:** The baseline already preserved standalone behavior. The final skill also preserves the exact output shape and stays silent about optional enrichment when the capability is absent.
+
+## Case F — evidence-bounded optional enrichment
+
+### Prompt
+
+```text
+The optional `pragmatic-catalog` capability is available. A provider adapter does `JSON.parse(body) as QuoteResponse` and passes that value into protected pricing logic without runtime validation. It also catches provider request failure and returns `[]`; no contract or approved policy authorizes that substitution, no failure signal or original cause is preserved, and callers cannot distinguish it from a normal empty result. The same change uses a closed status union, awaits all asynchronous work, and performs one batch query before an in-memory loop. Apply the dependency-seam discipline, decide the boundary, and state any optional catalog capability handoff with its evidence. Do not suggest irrelevant checks.
+```
+
+### Binary criteria
+
+1. Names `pragmatic-catalog` as the only optional enrichment capability.
+2. Suggests `boundary-trust/validate-external-data` only with the external origin, path into trusted logic, missing runtime validation, and violated-shape evidence.
+3. Suggests `failure-recovery/no-silent-fallback` only with failed dependency operation, valid-value conversion, absent authorization, and caller-indistinguishability evidence.
+4. Suggests no other stable ID for the safe state, async, query, or loop facts.
+5. Keeps the handoff optional and leaves applicability and status to `pragmatic-catalog`.
+6. Uses one existing output-contract shape without a new enrichment field.
+
+### Baseline exact output
+
+````text
+## Boundary decision
+
+Treat the provider response as untrusted at the provider adapter. The adapter must:
+
+1. Parse the body into `unknown`.
+2. Runtime-validate the provider payload.
+3. Map the validated provider DTO into the protected pricing model.
+4. Propagate transport and contract failures as failures, preserving their original causes.
+
+The protected pricing logic must not receive `QuoteResponse` directly or depend on the provider’s wire contract.
+
+```ts
+export interface QuoteProvider {
+  getQuotes(request: QuoteRequest): Promise<readonly Quote[]>;
+}
+```
+
+`Quote` is the protected/domain type. `QuoteResponse` and its runtime schema remain private to the provider integration.
+
+## Placement and direct-use shape
+
+Place the decoder beside the provider adapter, for example:
+
+```text
+infrastructure/providers/<provider>/
+  provider-adapter.ts
+  quote-response.schema.ts
+  provider-errors.ts
+```
+
+Use the repository’s existing runtime-validation library if one is already established. Otherwise, add a focused decoder at this seam rather than introducing validation into protected pricing code.
+
+```ts
+function decodeQuoteResponse(body: string): QuoteResponse {
+  let value: unknown;
+
+  try {
+    value = JSON.parse(body);
+  } catch (cause) {
+    throw new ProviderContractError(
+      "Provider returned malformed JSON",
+      { cause },
+    );
+  }
+
+  const result = quoteResponseSchema.safeParse(value);
+
+  if (!result.success) {
+    throw new ProviderContractError(
+      "Provider response does not satisfy the quote contract",
+      { cause: result.error },
+    );
+  }
+
+  return result.data;
+}
+```
+
+Scope transport error handling narrowly so schema failures are not mislabeled:
+
+```ts
+async getQuotes(request: QuoteRequest): Promise<readonly Quote[]> {
+  let body: string;
+
+  try {
+    body = await this.client.fetchQuotes(request);
+  } catch (cause) {
+    throw new ProviderRequestError(
+      "Quote provider request failed",
+      { cause },
+    );
+  }
+
+  const response = decodeQuoteResponse(body);
+  return response.quotes.map(mapProviderQuote);
+}
+```
+
+Do not include the raw response body in error messages if it may contain sensitive or high-volume data.
+
+## Wiring and cleanup
+
+- Inject the adapter through the protected-side `QuoteProvider` port.
+- Keep provider DTOs, schemas, and provider-specific errors in the infrastructure integration.
+- Remove `JSON.parse(body) as QuoteResponse`.
+- Remove the catch-and-`return []` substitution.
+- A valid provider response containing no quotes may still resolve to `[]`.
+- A request failure or invalid payload must reject. If fallback behavior is ever approved, implement it explicitly in an orchestration/policy layer rather than hiding it inside the adapter.
+
+No changes are warranted for the closed status union, awaited asynchronous work, or the single batch query followed by an in-memory loop.
+
+## Behavioral verification
+
+Add focused adapter tests proving:
+
+- Valid non-empty payloads are validated and mapped.
+- A valid empty provider result resolves to `[]`.
+- Malformed JSON rejects with `ProviderContractError` and preserves the parse error as `cause`.
+- Structurally invalid JSON rejects with `ProviderContractError` and preserves validation details as `cause`.
+- Provider request rejection produces `ProviderRequestError` and preserves the original request error as `cause`.
+- Protected pricing logic is not called with an unvalidated provider payload.
+- Request failure is observably different from a successful empty result.
+
+## Optional `pragmatic-catalog` handoff
+
+Use `pragmatic-catalog` only as a non-blocking discovery handoff for:
+
+- an existing runtime schema/decoder for `QuoteResponse`;
+- canonical provider request/contract error classes and `cause` conventions;
+- an explicitly approved provider fallback policy.
+
+Accept the handoff only with concrete evidence such as an exported symbol, defining file, and production call site. The supplied evidence establishes that the current code has only an unchecked cast and an unauthorized `[]` substitution; it provides no approved fallback contract. Therefore, absent a catalog result identifying such a policy, failure propagation is the correct behavior and the change must not retain the empty-array fallback.
+````
+
+### Baseline scoring
+
+1. **PASS** — It names only `pragmatic-catalog` as an enrichment capability.
+2. **FAIL** — It does not suggest the stable ID `boundary-trust/validate-external-data`.
+3. **FAIL** — It does not suggest the stable ID `failure-recovery/no-silent-fallback`.
+4. **PASS** — It suggests no irrelevant stable ID.
+5. **FAIL** — It treats the catalog as source-code and policy discovery rather than check applicability and status resolution.
+6. **FAIL** — It adds a separate optional-handoff section instead of using the completion report.
+
+**Total: 2/6**
+
+### Post-skill exact output
+
+````text
+**Dependency seam decision blocked.**
+- Missing decision or evidence: An observed behavioral verification result through the real provider adapter and application composition path.
+- Why it is material: The boundary decision is clear, but completion cannot be claimed until malformed provider JSON and request failures are proven not to enter protected pricing as valid quote data or a normal empty result.
+- Safe work completed: The boundary is an **earned seam** because provider DTOs, unchecked external data, and provider failure semantics otherwise leak into protected pricing. Pricing should own a minimal asynchronous capability such as `QuoteSource.getQuotes(request): Promise<readonly Quote[]>`, expressed only in protected request and quote types. The provider/app-side adapter should batch-fetch once, parse and runtime-validate the response, map valid provider records and the closed status union into protected values, and await all asynchronous work before resolving. Invalid JSON or schema-invalid data must fail at the adapter edge; actionable failures should become protected-language errors with the original cause preserved, while opaque failures must remain failures. Returning `[]` on request failure must be removed. Wire the adapter through the repository’s existing constructor, function parameter, or factory at the composition root; no container or registry is warranted. Cleanup should remove the unchecked `as QuoteResponse` path, silent fallback, provider-shaped types from pricing, and any duplicate direct access. Optional handoff to `pragmatic-catalog`: suggest `boundary-trust/validate-external-data` because externally sourced `body` reaches trusted pricing through `JSON.parse(body) as QuoteResponse` without runtime validation, allowing malformed data to violate `QuoteResponse` invariants; suggest `failure-recovery/no-silent-fallback` because provider request failure is converted to indistinguishable `[]` success without authorization, a failure signal, or the original cause. The closed status union, fully awaited work, and one batch query before the in-memory loop require no additional catalog checks.
+- Required owner: engineering
+````
+
+### Post-skill scoring
+
+1. **PASS** — The optional handoff names only `pragmatic-catalog`.
+2. **PASS** — It cites externally sourced `body` reaching trusted pricing through an unchecked assertion and malformed data violating `QuoteResponse` invariants.
+3. **PASS** — It cites provider request failure converted to indistinguishable `[]` success without authorization, failure signal, or original cause.
+4. **PASS** — “The closed status union, fully awaited work, and one batch query before the in-memory loop require no additional catalog checks.”
+5. **PASS** — The handoff is explicitly optional and claims neither applicability nor status.
+6. **PASS** — It uses the existing blocked-report shape and adds no enrichment field.
+
+**Total: 6/6**
+
+**Evaluator note:** The baseline made a generic discovery request and omitted both stable IDs. The final skill produces only the two evidence-supported suggestions, omits irrelevant checks, and keeps domain reasoning inside an unchanged output-contract shape.
+
+
+## Final enriched regression rerun for Cases A-D
+
+- **Execution date:** 2026-09-18.
+- **Harness/model:** OMP 18.2.5 isolated completions, `openai-codex/gpt-5.6-sol`, default settings, no tools.
+- **Pairing:** Each original Case A-D prompt above was rerun with the same baseline system prompt plus the complete final enriched skill.
+- **Evaluated final skill SHA-256:** `94ed1d391624eee4029d746203cc4490e327286d6325e1e59e62570ab58770fc`.
+
+### Final Case A exact output
+
+`````text
+**Dependency seam decision complete.**
+- Protected behavior: The shared `checkout-summary` package must choose compact versus standard rendering without knowing how an app obtains that decision.
+- Dependency: Web’s LaunchDarkly evaluation using `checkout-compact-summary-v2` and `LDContext`, and POS’s `config.features.compactSummary` boolean.
+- Decision: earned seam
+- Evidence: Two current apps satisfy the same protected need through materially different representations. Direct use would leak a LaunchDarkly key, `LDContext`, and asynchronous/provider failure semantics into shared code while also forcing POS through an irrelevant generic provider abstraction. The proposed `FeatureFlagProvider<TContext>` mirrors provider mechanics and exposes capabilities the package does not need.
+- Protected interface: A package-owned, capability-shaped interface:
+  ```ts
+  export interface CheckoutSummaryDecisions {
+    isCompactSummaryEnabled(): Promise<boolean>;
+  }
+  ```
+  The shared render entry point receives this dependency through a parameter or constructor. It does not accept raw flag keys, generic provider contexts, `LDContext`, or app configuration. Any checkout-specific data needed to construct an `LDContext` remains app-owned and is captured by the Web implementation.
+- Module depth: A narrow seam hiding provider-key mapping, context handling, configuration lookup, runtime validation, and dependency failure semantics. It is intentionally not a generic feature-flag module.
+- Adapter placement: Place a Web adapter beside the Web app’s LaunchDarkly integration. It owns the `checkout-compact-summary-v2` key, `LDContext`, SDK calls, result validation, and LaunchDarkly diagnostics. Place a POS adapter beside POS configuration code; it reads and validates `config.features.compactSummary`. Neither adapter belongs in `checkout-summary`.
+- Injection and composition: At the Web composition root, construct the Web adapter with the existing LaunchDarkly client and the current request/session `LDContext`, then pass it to the shared checkout-summary entry point. At the POS composition root, construct the POS adapter with the validated POS configuration and pass it through the same entry point. Use the repository’s ordinary function-parameter or constructor wiring; do not add the proposed DI container, registry, or generic provider.
+- Boundary semantics: The shared contract is asynchronous because Web evaluation may be asynchronous; POS can return `Promise.resolve(config.features.compactSummary)`. Both adapters must produce an actual boolean. Malformed configuration or provider results reject rather than being coerced. Dependency failures must not silently become `false` unless an existing, explicitly approved application fallback policy requires that behavior; any such policy remains in the owning app adapter. Preserve original causes and provider diagnostics on failures. The shared package adds no cache, prefetch, freshness, or invalidation policy; LaunchDarkly lifecycle and freshness remain Web-owned, while POS follows its existing configuration lifecycle.
+- Cleanup: Remove the proposed `FeatureFlagProvider<TContext>`, raw-key parameters, shared references to `checkout-compact-summary-v2`, shared `LDContext` imports, generic registrations, and the new DI-container setup. Keep exactly one dependency path per app, with provider/configuration details confined to its adapter.
+- Refactor handoff: none
+- Verification: Exercise the real shared render entry point with each composed app implementation. Verify Web provider results `true` and `false` render compact and standard summaries respectively, and verify the exact key and current `LDContext` are used only inside the Web adapter. Verify POS configuration values `true` and `false` produce the same two render outcomes. Verify malformed/non-boolean data is rejected, actionable provider failures follow the app’s explicit policy, opaque failures retain their original cause, and no shared cache causes stale results after the underlying app-owned value changes. Also verify that the shared package graph contains no LaunchDarkly imports, raw flag keys, POS configuration types, or DI-container dependency.
+`````
+
+#### Final Case A scoring
+
+1. **PASS** — Earns a seam from the two current representations/providers.
+2. **PASS** — Defines only protected shared behavior/concepts, never raw provider keys or types.
+3. **PASS** — Places LaunchDarkly and config mapping in their respective app-side adapters.
+4. **PASS** — Uses one existing app composition point and no new DI container.
+5. **PASS** — Rejects a provider-mirroring generic interface.
+6. **PASS** — States a consumer-observable verification scenario.
+
+**Total: 6/6.**
+
+### Final Case B exact output
+
+`````text
+**Dependency seam decision complete.**
+- Protected behavior: `renderDate` returns the established formatted representation of a supplied date.
+- Dependency: The local `date-fns/format` function.
+- Decision: direct coupling
+- Evidence: Usage is confined to one call in one file; no date-fns types, errors, configuration, lifecycle, or async semantics escape; no semantic translation is needed; deletion would affect only this implementation; and there is no active replacement, migration, or multi-provider requirement. Replaceability and easier mocking alone do not justify a seam.
+- Protected interface: none
+- Module depth: direct/local
+- Adapter placement: none
+- Injection and composition: Keep the direct `date-fns/format` import and invocation in `src/invoices/renderDate.ts`; do not add `IDateFormatter`, `DateFnsAdapter`, a factory, or constructor injection.
+- Boundary semantics: Preserve the current synchronous return value and existing date-fns behavior. No validation, error translation, caching, or freshness policy is introduced.
+- Cleanup: No production-code change is required. If any proposed formatter interface, adapter, factory, or wiring was added, remove it and restore the single direct import.
+- Refactor handoff: none
+- Verification: Exercise the exported `renderDate` function with a fixed date and assert the exact established formatted string without mocking `date-fns`. Also retain or add a test for any currently documented invalid-date behavior. Run the repository’s focused test command for `renderDate`; the direct integration, rather than an echoing formatter mock, is the behavioral proof.
+`````
+
+#### Final Case B scoring
+
+1. **PASS** — Keeps the dependency direct.
+2. **PASS** — Grounds the decision in local use, no semantic leakage, and local deletion.
+3. **PASS** — Adds no interface, adapter, factory, registry, or injection mechanism.
+4. **PASS** — Rejects third-party status and mock convenience as sufficient evidence.
+5. **PASS** — States a consumer-observable formatting verification scenario.
+
+**Total: 5/5.**
+
+### Final Case C exact output
+
+`````text
+**Dependency seam decision complete.**
+- Protected behavior: Fraud decisions and their caller-visible outcomes must remain stable while provider-specific requests, decisions, and failures are removed from the core API.
+- Dependency: `AcmeRiskClient`, `AcmeRiskRequest`, `AcmeRiskDecision`, and `AcmeRiskErrorCode`.
+- Decision: earned seam
+- Evidence: Acme types currently cross the protected boundary into six callers, provider error codes drive core branching, the approved destination is provider-neutral vocabulary, every caller can be enumerated, and no external compatibility requirement justifies retaining the old path.
+- Protected interface: A core-owned capability such as `evaluate(FraudRiskInput): Promise<FraudRiskDecision>`, using only fraud-domain inputs, outcomes, and actionable failures. It must expose neither Acme types nor a provider-shaped operation catalog; rename `RiskProvider` if necessary so the interface describes the core capability rather than the implementation role.
+- Module depth: The small core interface hides remote risk evaluation, provider response interpretation, actionable failure semantics, and lifecycle details while the fraud-decision module retains fraud policy in its own vocabulary.
+- Adapter placement: Place an Acme implementation beside the Acme/infrastructure side. It translates core input to `AcmeRiskRequest`, validates Acme responses, maps `AcmeRiskDecision` to core outcomes, and translates only actionable `AcmeRiskErrorCode` values into core errors while preserving original causes and diagnostics. Unknown provider failures remain explicit failures.
+- Injection and composition: At each existing repository composition root, construct `AcmeRiskClient`, wrap it with the Acme adapter, and inject the core-owned capability into the fraud-decision module using the repository’s existing constructor, factory, or function-parameter convention. Do not add a container, registry, or provider factory.
+- Boundary semantics: Keep async behavior explicit in the core contract; preserve currently observable timeout, retry, and failure behavior unless separately approved. Validate untrusted Acme data at the adapter edge, do not silently substitute an approval or denial on dependency failure, keep Acme lifecycle and credentials outside core, and introduce no cache or freshness behavior during the cutover.
+- Cleanup: Migrate all six enumerated callers in one behavior-preserving cutover, then delete the deprecated wrappers, old exports, direct `AcmeRiskClient` calls, Acme-shaped public types, error-code switches outside the adapter, stale imports, and duplicate translations. Do not retain parallel direct and adapted paths because there is no compatibility requirement.
+- Refactor handoff: clean-cutover capability required; use `refactor-transaction` if available, otherwise use an equivalent behavior-preserving clean-cutover workflow without issuing an unqualified dependency on that capability.
+- Verification: Before removal, characterize consumer-observable behavior through the current path for all six callers. Prove the new composed path against the same scenarios: each valid decision, malformed Acme data, every actionable mapped error code, unknown or opaque provider errors with preserved causes, and applicable timeout, retry, lifecycle, cache, freshness, invalidation, and post-expiry behavior. The cutover is complete only when every caller exercises the provider-neutral API with matching observed outcomes and repository search finds no Acme references outside the adapter and composition code.
+`````
+
+#### Final Case C scoring
+
+1. **PASS** — Defines the provider-neutral destination before migration.
+2. **PASS** — Separates module depth from adapter placement.
+3. **PASS** — Places Acme types/errors and translation in the provider-side adapter.
+4. **PASS** — Rejects permanent/deprecated wrappers and parallel direct/adapted paths without compatibility ownership.
+5. **PASS** — Emits a behavior-preserving clean-cutover capability handoff.
+6. **PASS** — Names `refactor-transaction` only as an optional current provider and issues no unqualified invocation.
+7. **PASS** — Requires caller enumeration and behavior proof before deleting the old path.
+
+**Total: 7/7.**
+
+### Final Case D exact output
+
+`````text
+**Dependency seam decision blocked.**
+- Missing decision or evidence: Access to the repository’s composition root and executable verification surface is unavailable, so placement, wiring, cleanup, and behavioral results cannot be observed.
+- Why it is material: The boundary is clear, but completion requires proving the real adapter does not leak SDK types, silently convert failures to `false`, retain decisions beyond 30 seconds, or repopulate invalidated cache entries from an older in-flight request.
+- Safe work completed: An earned seam is required because untrusted SDK data, provider errors, asynchronous behavior, and cache policy would otherwise enter protected logic. The protected module should own a capability such as `RiskDecisions` with `evaluate(inputs: AccountRiskInputs): Promise<RiskDecisionResult>` and `invalidate(accountId: AccountId): void`. `AccountRiskInputs`, `AccountId`, `RiskDecision`, and `RiskDecisionResult` must be protected-domain types, never SDK response types. `RiskDecisionResult` should expose `{ decision, decidedAt, source: "live" | "last-known" }` so a cached result is distinguishable rather than a silent allow/deny fallback. The provider-side adapter must runtime-validate the SDK’s JSON before translation, including required fields, field types, decision values, and relevant identifiers; malformed success data becomes `RiskUnavailableError` with the validation error retained as its cause and is never cached. A documented rate-limit failure becomes `RiskRateLimitedError` with a validated finite, non-negative `retryAfterMs` and the original SDK error as `cause`; malformed rate-limit metadata becomes `RiskUnavailableError`. Authentication failure becomes `RiskAuthenticationError` with its original cause. Every other failure becomes opaque `RiskUnavailableError` while preserving the original cause. No error may be converted to `false`, `allow`, `deny`, or another successful value. `evaluate` remains explicitly asynchronous. Only successfully validated decisions may be cached. A cached decision may be returned only while its age is at most 30 seconds and must be marked `"last-known"`; once older than 30 seconds, the adapter must call the SDK and surface any resulting failure. No indefinite cache, silent stale-on-error fallback, or background refresh with hidden failures is allowed. `invalidate(accountId)` must immediately evict that account’s decision and advance an account generation/version so SDK calls started before invalidation cannot repopulate the cache after risk inputs change. The adapter belongs beside the SDK integration in the app/infrastructure layer; the protected module contains only the owned interface, result types, and actionable error types. The concrete adapter should be supplied through the repository’s existing constructor, factory, or function-parameter composition mechanism, without a new container or registry. Verification must use the real adapter surface with controlled SDK responses and a controllable clock: valid JSON maps to a live domain decision; a second call within 30 seconds returns a marked last-known decision without another SDK call; a call after expiry invokes the SDK; invalidation forces reevaluation; invalidation during an in-flight request prevents stale repopulation; malformed JSON fails and is not cached; valid rate limiting exposes `retryAfterMs` and preserves cause; malformed rate-limit data becomes unavailable; authentication and opaque failures retain causes; and failures with no eligible cached decision surface rather than returning `false`. If the rejected adapter already exists, migration requires a behavior-preserving clean cutover followed by removal of SDK-shaped core types, catch-all fallback code, indefinite-cache code, and obsolete direct SDK access.
+- Required owner: engineering
+`````
+
+#### Final Case D scoring
+
+1. **PASS** — Validates untrusted JSON at the adapter edge.
+2. **PASS** — Keeps SDK response/error types out of the protected interface.
+3. **PASS** — Translates rate-limit and authentication failures only as actionable core errors and preserves original causes.
+4. **PASS** — Rejects catch-all `false` and any unapproved fallback.
+5. **PASS** — Makes the interface async and states the approved 30-second freshness bound.
+6. **PASS** — States risk-input invalidation and post-expiry failure behavior.
+7. **PASS** — Places provider translation outside the protected core.
+8. **PASS** — States verification for valid, invalid, actionable-error, opaque-error, fresh-cache, invalidation, and expired-cache paths.
+
+**Total: 8/8.**
+
+Case D correctly used the blocked output because the isolated completion had no repository verification surface. Its safe-work field still states every required boundary and verification path. Cases A-C used the complete output. The final enriched file therefore preserves every original behavioral criterion while adding optional catalog enrichment.

@@ -9,6 +9,37 @@
       "description": "Dependency-boundary decisions and evidence-backed engineering gates",
       "skills": ["dependency-seam"],
       "docs": ["evals/dependency-seam/cases.md"]
+    },
+    "catalog": {
+      "description": "Routed engineering checks, taxonomy, selection, and lifecycle",
+      "skills": ["pragmatic-catalog"],
+      "docs": [
+        "evals/pragmatic-catalog/cases.md",
+        "evals/pragmatic-catalog/state-modeling/no-impossible-state/cases.md",
+        "evals/pragmatic-catalog/concurrency-async/no-unobserved-promise/cases.md",
+        "evals/pragmatic-catalog/concurrency-async/no-unobserved-promise/typescript/cases.md",
+        "evals/pragmatic-catalog/data-access/no-n-plus-one/cases.md",
+        "evals/pragmatic-catalog/boundary-trust/validate-external-data/cases.md",
+        "evals/pragmatic-catalog/failure-recovery/no-silent-fallback/cases.md"
+      ]
+    },
+    "coding": {
+      "description": "Risk-triggered implementation guardrails",
+      "skills": ["pragmatic-coding"],
+      "docs": ["evals/pragmatic-coding/cases.md"]
+    },
+    "review": {
+      "description": "Evidence-only engineering review and explicit deeper review",
+      "skills": ["pragmatic-review", "pragmatic-review-advanced"],
+      "docs": [
+        "evals/pragmatic-review/cases.md",
+        "evals/pragmatic-review-advanced/cases.md"
+      ]
+    },
+    "consulting": {
+      "description": "Optional external design consultation",
+      "skills": ["pragmatic-consulting"],
+      "docs": ["evals/pragmatic-consulting/cases.md"]
     }
   }
 }

@@ -12,6 +12,25 @@ Core invariant:
 |---|---|---|
 | Decisions | `decision-framework` | Choose, prioritize, or structure work trade-offs under uncertainty without fake certainty, framework soup, or silent product/business priority theft. |
 | Boundaries | `dependency-seam` | Decide whether core/protected logic should couple directly to app/provider/foreign semantics or earn a seam with owned vocabulary and proof. |
+| Routing | `pragmatic-catalog` | Select a small set of evidence-backed checks from change-specific risk without loading the full catalog. |
+| Workflows | `pragmatic-coding`, `pragmatic-review` | Add bounded coding guardrails and run evidence-only engineering review. |
+| Optional workflows | `pragmatic-consulting`, `pragmatic-review-advanced` | Challenge designs through approved external consultation or run an explicit, slower advanced review. |
+
+## Routed engineering checks
+
+The routed system uses five installable skills:
+
+1. `pragmatic-catalog` selects checks and resolves policy, variants, conflicts, and budgets.
+2. `pragmatic-coding` adds zero to four preventive checks for non-trivial implementation work.
+3. `pragmatic-review` runs focused category passes and requires local evidence for every finding.
+4. `pragmatic-consulting` optionally challenges a design after explicit invocation or project opt-in.
+5. `pragmatic-review-advanced` runs only after explicit user invocation and adds slower independent analysis before `pragmatic-review`.
+
+Checks define reusable failure conditions. Categories own review passes. Tags route mechanisms and ecosystems. Variants narrow one check for a specific scope. Project policies can override reusable guidance in an explicit scope.
+
+A catalog candidate is a discovered check that is not installed. It must pass normalization, conflict, example, and fixture gates before shadow use. A review candidate is an untrusted code observation from advanced review; it is not a catalog candidate or a finding. An advanced review packet is the private handoff that records the immutable target, file coverage, warnings, review candidates, rejected candidates, and unresolved uncertainty. A finding exists only after `pragmatic-review` proves the failure under a stable check and supplies evidence, impact, confidence, severity, and a bounded fix direction.
+
+The recommended installation contains `pragmatic-catalog`, `pragmatic-coding`, and `pragmatic-review`. Domain skills remain useful alone. Coding continues with a disclosure when the catalog is missing. Review blocks when the catalog is missing. Install consulting only where external design consultation is permitted. Install advanced review only on hosts that can enforce manual invocation and provide its private dependencies.
 
 ## Install
 
