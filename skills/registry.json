@@ -41,6 +41,14 @@
       "description": "Optional external design consultation",
       "skills": ["pragmatic-consulting"],
       "docs": ["evals/pragmatic-consulting/cases.md"]
+    },
+    "feature-readiness": {
+      "description": "Project-specific feature-readiness criteria and evidence-only evaluation",
+      "skills": ["create-feature-checklist", "check-feature-readiness"],
+      "docs": [
+        "evals/create-feature-checklist/cases.md",
+        "evals/check-feature-readiness/cases.md"
+      ]
     }
   }
 }

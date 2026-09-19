@@ -15,6 +15,7 @@ Core invariant:
 | Routing | `pragmatic-catalog`, `derive-catalog-candidates` | Select active evidence-backed checks from change-specific risk and derive isolated reusable-rule candidates from bounded local evidence. |
 | Workflows | `pragmatic-coding`, `pragmatic-review` | Add bounded coding guardrails and run evidence-only engineering review. |
 | Optional workflows | `pragmatic-consulting`, `pragmatic-review-advanced` | Challenge designs through approved external consultation or run an explicit, slower advanced review. |
+| Feature readiness | `create-feature-checklist`, `check-feature-readiness` | Create repository-specific readiness criteria from versioned fallbacks, then evaluate supplied evidence without executing verification or taking product acceptance ownership. |
 
 ## Routed engineering checks
 
