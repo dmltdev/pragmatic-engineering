@@ -12,9 +12,10 @@
     },
     "catalog": {
       "description": "Routed engineering checks, taxonomy, selection, and lifecycle",
-      "skills": ["pragmatic-catalog"],
+      "skills": ["pragmatic-catalog", "derive-catalog-candidates"],
       "docs": [
         "evals/pragmatic-catalog/cases.md",
+        "evals/derive-catalog-candidates/cases.md",
         "evals/pragmatic-catalog/state-modeling/no-impossible-state/cases.md",
         "evals/pragmatic-catalog/concurrency-async/no-unobserved-promise/cases.md",
         "evals/pragmatic-catalog/concurrency-async/no-unobserved-promise/typescript/cases.md",

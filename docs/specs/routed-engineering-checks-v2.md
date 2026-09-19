@@ -26,9 +26,9 @@ This specification supersedes the first-release prohibition on a rule catalog an
 
 Checks are dormant reference material. A router selects them from change-specific evidence. Coding receives a very small set of preventive guardrails; review receives broader coverage through focused category passes; consultation may apply design-phase checks after receiving an independent external design opinion. A manually invoked advanced review may add slower, independent, coverage-checked analysis before local pragmatic validation.
 
-The system optimizes first for trustworthy, actionable findings. A check cannot create a developer-facing finding without concrete code evidence. Discovery may create candidates automatically, but candidates cannot affect coding or review until they pass quality gates and promotion.
+The system optimizes first for trustworthy, actionable findings. A check cannot create a developer-facing finding without concrete code evidence. Explicit bounded discovery may derive candidate packets, but only an explicit catalog-maintainer import creates a candidate; candidates cannot affect coding or review until they pass quality gates and promotion.
 
-Automated discovery scheduling is outside this specification. This specification begins when discovered material enters the candidate lifecycle.
+Automated discovery scheduling is outside this specification. `derive-catalog-candidates` performs explicit, packet-only derivation from a bounded local source set; it does not schedule sources or mutate catalog state.
 
 ## Users
 
@@ -87,6 +87,10 @@ A language-, framework-, or ecosystem-specific refinement of one core check. A v
 
 Discovered content that is not available to coding or review. A candidate remains untrusted until normalized, conflict-checked, fixture-validated, and promoted to shadow.
 
+### Candidate packet
+
+The portable derivation artifact produced from a bounded local source set. It records provenance, a proposed failure condition, catalog comparison, scope, counterevidence, and admission blockers. It has no catalog mutation authority; a catalog maintainer explicitly imports it before it becomes a candidate.
+
 ### Fixture
 
 A realistic evaluation case used for promotion and regression. Every check requires at least one positive fixture that must be detected and one similar-looking negative fixture that must not produce a finding.
@@ -116,6 +120,12 @@ An untrusted observation from the advanced reviewer. It may direct local inspect
 The normalized handoff from advanced review: review-model identity, exact target, selected and excluded files, per-file reviewed or skipped status, applicable rule groups, warnings, unresolved uncertainty, and candidate observations. Provider-specific reasoning and hidden chain-of-thought are excluded.
 
 ## Architecture
+
+### `derive-catalog-candidates`
+
+`derive-catalog-candidates` is a portable, explicit discovery skill. It accepts bounded bug-fix, accepted-feedback, incident, or technical-source evidence together with authorized catalog comparison material. It reconstructs a semantic failure condition, separates project policy from reusable guidance, compares existing checks and candidates, and returns one isolated packet: a new core or variant candidate, a refinement, duplicate, policy, taxonomy gap, no candidate, or blocked result.
+
+The skill neither persists nor installs a candidate. It does not select active checks, create findings, create categories, schedule discovery, or access external systems without explicit authorization. A catalog maintainer may import its packet into the canonical candidate queue. Candidate normalization, conflict handling, examples, fixtures, shadow evaluation, and activation remain separate lifecycle gates.
 
 ### `pragmatic-catalog`
 
@@ -387,14 +397,15 @@ discovered
 
 Rules:
 
-- Scheduled discovery may create candidates but cannot create active checks.
+- Explicit bounded derivation may return candidate packets but cannot mutate catalog state.
+- Only an explicit catalog-maintainer import turns a packet into a candidate.
+- Scheduled discovery remains outside this specification and cannot create active checks.
 - Candidates do not appear in the installed catalog index.
 - Inline examples teach the check boundary but do not substitute for independent fixtures.
 - A positive fixture must demonstrate the defect and required evidence.
 - A negative fixture must closely resemble the signal while remaining valid.
 - A shadow check cannot create developer-facing findings or alter coding guidance.
-- The MVP automatically moves fixture-valid, conflict-free candidates into shadow.
-- MVP activation is a batchable maintainer decision informed by shadow evidence.
+- The MVP automatically moves fixture-valid, conflict-free candidates into shadow; activation is a batchable maintainer decision informed by shadow evidence.
 - Automatic precision-threshold activation is deferred until real-diff labels are trustworthy.
 - Deprecated and superseded IDs remain resolvable for historical references and point to their replacement when one exists.
 
@@ -437,6 +448,7 @@ pragmatic-engineering/
 │   │   ├── categories.md
 │   │   ├── checks/<category>/<check>.md
 │   │   └── variants/<category>/<check>/<scope>.md
+│   ├── derive-catalog-candidates/SKILL.md
 │   ├── pragmatic-consulting/SKILL.md
 │   ├── pragmatic-review-advanced/
 │   │   ├── SKILL.md
@@ -447,6 +459,7 @@ pragmatic-engineering/
 │   └── dependency-seam/SKILL.md
 ├── candidates/checks/<candidate>.md
 ├── evals/
+│   ├── derive-catalog-candidates/cases.md
 │   ├── pragmatic-catalog/<check>/cases.md
 │   ├── pragmatic-consulting/cases.md
 │   ├── pragmatic-review-advanced/cases.md
