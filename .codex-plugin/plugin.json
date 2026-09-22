@@ -1,6 +1,6 @@
 {
   "name": "pragmatic-engineering",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Portable agent skills for pragmatic engineering decisions, prioritization, dependency seams, and evidence-backed quality gates",
   "author": {
     "name": "Dmytro L.",

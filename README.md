@@ -16,6 +16,7 @@ Core invariant:
 | Workflows | `pragmatic-coding`, `pragmatic-review` | Add bounded coding guardrails and run evidence-only engineering review. |
 | Optional workflows | `pragmatic-consulting`, `pragmatic-review-advanced` | Challenge designs through approved external consultation or run an explicit, slower advanced review. |
 | Feature readiness | `create-feature-checklist`, `check-feature-readiness` | Create repository-specific readiness criteria from versioned fallbacks, then evaluate supplied evidence without executing verification or taking product acceptance ownership. |
+| Operations | `install-pragmatic-engineering` | Install or verify this local plugin across Pi, OMP, Claude Code, and Codex with per-target evidence. |
 
 ## Routed engineering checks
 
@@ -37,6 +38,8 @@ A catalog candidate is a discovered check that is not installed. It must pass no
 The recommended installation contains `pragmatic-catalog`, `pragmatic-coding`, and `pragmatic-review`. Install `derive-catalog-candidates` when a catalog maintainer needs to turn bounded local evidence into an importable candidate packet. Domain skills remain useful alone. Coding continues with a disclosure when the catalog is missing. Review blocks when the catalog is missing. Install consulting only where external design consultation is permitted. Install advanced review only on hosts that can enforce manual invocation and provide its private dependencies.
 
 ## Install
+
+Use [`install-pragmatic-engineering`](skills/install-pragmatic-engineering/SKILL.md) after changing skills or manifests. It defaults to this local checkout, requires aligned manifest versions, treats unavailable harnesses as skips, and reports installation and activation evidence separately for Pi, OMP, Claude Code, and Codex.
 
 ### skills.sh
 
